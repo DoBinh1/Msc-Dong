@@ -1,0 +1,316 @@
+Numerical Simulation of Void Growth in Electrical
+                     Solder Material
+
+                                                                      Thomas Jin-Chee Liu
+                                                           Department of Mechanical Engineering
+
+                                                             Ming Chi University of Technology
+                                                                   New Taipei City, Taiwan
+                                                                  jinchee@mail.mcut.edu.tw
+
+    Abstract -- This paper deals with the void growth in electrical                      In addition, the diffusivity is expressed as [5]:
+materials such as Sn-Ag-Cu solder for the electronic packaging.
+The small-sized Sn-Ag-Cu strip with a notch is analyzed using                            D    D0  exp(  Ea   )                              (6)
+the finite element method. Under the electric load, the                                                 kBT
+electromigration, thermo-migration, stress-migration and pure
+atomic diffusion are the driving forces for the void growth. As a                    or
+result, the electro-thermo-structural-diffusion coupled-field are
+obtained. Due to the atomic migration, the void growth history is                        D    D0  exp(  Eam  )                              (7)
+obtained using the element-birth-and-death simulation in ANSYS                                          RT
+software. Furthermore, the electric resistance and time to failure
+of the Sn-Ag-Cu solder strip are determined for the electronic                       where D0, Ea, Eam and R are the pre-exponential diffusivity,
+reliability and design.                                                              activation energy, activation energy per mole and universal gas
+                                                                                     constant, respectively. According to Eqs. (1)-(5), four kinds of
+    Keywords -- solder, void growth, atomic migration, coupled-                      atomic fluxes are respectively induced by the gradient terms of
+field, finite element, time to failure                                               V , T ,  H and C .
+
+                                     I. INTRODUCTION
+
+For the electronic reliability, the failure and life of the
+
+electrical solder materials such as Sn-Pb or Sn-Ag-Cu (SAC)
+
+play the important roles so that the optimal design and accurate
+
+failure prediction must be improved. Under the electric current
+
+loads, the atomic migration phenomenon associated with voids
+
+and failure is usually investigated in the electrical solder
+
+material as shown in Fig. 1. There are four types of the atomic
+
+migration phenomena: the electromigration, thermo-migration,
+
+stress-migration and pure atomic diffusion [1-9]. The
+
+governing equations are listed as follows [1-5]:
+
+                                                                            (1)      Fig. 1. Atomic flux/migration.
+                                     Jt  Jem  Jth  J st  J d
+                                                                                         In Fig. 1, the directions of the electron flow, heat flow and
+                                                 CZ *eD  V                  (2)      compressive driving force are identical to the atomic flux or
+                                     J em         kBT                                migration. The atomic flux hits and moves the atoms so that
+                                                                                     the void is created. Also, the hillock is formatted on the
+                                                 CQ*D    T                  (3)      downstream region due to the atom accumulation.
+                                     J th        kBT 2
+                                                                                         The void formation and growth can make the structure
+                                               CD        H                      (4)  failure and increase the electric resistance. Both results make
+                                     Jst       kBT                                   the problem of the electronic reliability. In this paper, the
+                                                                                (5)  atomic migration, void growth, electric resistance change and
+                                                                            atomic   failure mode of the SAC solder are studied using the finite
+                                          Jd  DC                                     element method. The sample is a SAC strip with a semi-
+                                                                                     circular notch. Under the electric load, the electro-thermo-
+where  Jt  ,  J em  ,  Jth  ,  J st  and   Jd  are  the  total  normalized           structural-diffusion coupled-field will be obtained. By the use
+                                                                                     of the element-birth-and-death (EBD) simulation in ANSYS
+flux, electromigration flux, thermo-migration flux, stress-                          software, the void growth history can be determined.
+
+migration flux and pure atomic diffusion, respectively. The
+
+parameters V, T, H, C, Z*, e, D, kB, Q* and are the electric
+potential, temperature, hydrostatic stress, normalized atomic
+
+density, effective charge number, elementary charge,
+
+diffusivity, Boltzmann's constant, heat of transport and atomic
+
+volume, respectively.
+Furthermore, the electric resistance and time to failure of the         The initial conditions for the thermal and diffusion fields
+SAC strip can be defined for the electronic reliability and         are as follows:
+design.
+                                                                                                   Ci=1, Ti=26 °C         (8)
+                    II. PROBLEM STATEMENTS
+                                                                        Figs. 3~5 show the finite element mesh of this problem.
+    In Fig. 2, the small-sized strip has a semi-circular notch and  The model is established by the ANSYS software [5]. The
+is made of SAC solder. The dimensions L,W, e and R are the          SOLID226 elements are used to simulate the electro-thermo-
+strip length, width, thickness and notch radius. The values are     structural-diffusion coupled-field and atomic migration. In Figs.
+L=2000 m, W=100 m, e=0.5 m and R=50 m.                              4 and 5, the refined mesh around the circular notch is used for
+                                                                    obtaining accurate results.
+
+                                                                    The normalized atomic density C is defined as [1,5]:
+
+                                                                                                   C=Ca/Cini              (8)
+
+                                                                    where Ca and Cini are the atomic density and initial atomic
+                                                                    density. The initial condition is under an equilibrium state, i.e.
+                                                                    C=Ci=1 for the whole strip.
+
+                                                                        In the finite element analysis, a new distribution of C is
+                                                                    obtained after a time period from the initial state. If C<1 (i.e.
+                                                                    Ca<Cini), it means that the atomic density reduces and some
+                                                                    atoms are removed by the atomic flux/migration. Oppositely,
+                                                                    if C>1 (i.e. Ca>Cini), the atomic density increases and some
+                                                                    atoms are accumulation.
+
+Fig. 2. Problem definition.
+
+TABLE I.                          MATERIAL DATA [5].
+
+  material or physical constant            SnAgCu                   Fig. 3. Finite element model.
+                                  1.3806488×10-11 (pJ/K)
+     Boltzmann constant kB        8.6173324×10-5(eV/K)
+
+universal gas constant R (J/K-             8.31445
+                mole)                    20.75×10-14
+
+electric resistivity e (T-m)               4.1×107
+ pre-exponential diffusivity D0
+                                           57×106
+               (m2/s)
+     thermal conductivity kth             219×1012
+                                         7390×10-18
+            (pW/m-K)
+   specific heat cp (pJ/kg-K)                 0.98
+   mass density m (kg/m3)                   0.0094
+   activation energy Ea (eV)
+   heat of transport Q* (eV)                  -23
+  effective charge number Z*             2.71×10-11
+    atomic volume  (m3)                   26.2×103
+
+  Young's modulus Es (MPa)                    0.35
+        Poisson's ratio                        1
+
+  reference concentration Cref              1×10-5
+     coefficient of diffusion
+    expansion for back stress              23×10-6
+           calculation fdi
+
+coefficient of thermal expansion
+               (1/K)
+
+    The material data in TABLE I are necessary for the finite       Fig. 4. Finite element model.
+element simulation [5]. The strip is subjected to an electric load
+
+I0 (0.012 A). The convective conditions (convective coefficient
+h=21 W/(m2-ºC) and ambient temperature T  =26 ºC) are
+
+applied on all areas of the strip. Proper structural boundary
+conditions are also applied to fix the strip.
+                                                                   time before the void formation (t=16354000 s). It is observed
+
+                                                                   that the current density concentration, stress concentration, hot
+
+                                                                   region can be found around the circular notch. These results
+                                                                                                                      
+                                                                   make  the  fluxes  of  J em  ,  Jth  ,  J st  and  Jd  .  As  a  result,  it  makes  the
+
+                                                                   atomic migration and void formation.
+
+Fig. 5. Finite element model.
+
+In this study, the following criteria are used to predict the
+
+creation of void or hillock:
+
+C < Cvoid : void formation       (9a)
+
+C > Chill : hillock formation    (9b)                              Fig. 7. Electric current density (Jy, units: pA/m2) at t=16354000 s.
+
+where Cvoid and Chill are the threshold values for the void and
+hillock formation, respectively. According to ref. [1], Cvoid=
+0.85 is adopted in this study. In addition, the hillock formation
+is not considered and discussed.
+
+    The void formation and growth process are simulated by
+EBD technique in ANSYS [5]. For example, the method is
+shown in Fig. 6. At t=t1, the whole field of the normalized
+atomic density C is defined. In one element, if the region of
+C<Cvoid exceed half element volume, this "death" element will
+be removed so as to be a void formation at t=t2. Repeating the
+process in Fig. 6, the void growth history can be obtained by
+ANSYS.
+
+                                                                   Fig. 8. Temperature field (units: oC) at t=16354000 s.
+
+Fig. 6. EBD for void formation.
+
+                 III. RESULTS AND DISCUSSIONS                      Fig. 9. Normal stress field (y, units: MPa) at t=16354000 s.
+
+    First, the initial time of the void formation needs to be
+defined. After the finite element calculation with the time step
+t=3000 s, the initial time is found to be 16357000 s (i.e. 4544
+hours). In Figs. 4~10, the electric current density, temperature,
+normal stress and normalized atomic density are shown at the
+                                                                     because the electric load I0 is a constant. Furthermore, it can
+                                                                     induce higher electromigration flux associated with the
+                                                                     quicker void growth.
+
+                                                                                          250
+
+                                                                                          200
+
+                                                                     void volume vo (m3)  150
+
+                                                                                          100
+
+Fig. 10. Normalized atomic density (dimensionless) at t=16354000 s.
+
+                                                                                          50
+
+                                                                                             0      16360000  16365000 16370000 16375000  16380000  16385000
+                                                                                          16355000
+                                                                                                                         time t (s)
+
+                                                                     Fig. 12. Void volume variation versus time.
+
+                                                                                          60
+
+                                                                                          50
+
+t=16357000 s                                     t=16363000 s
+
+                                                                     narrow width wn (m)  40
+
+                                                                                          30
+
+                                                                                          20
+
+t=16366000 s                                     t=16372000 s                             10
+
+                                                                                             0      16360000  16365000 16370000 16375000  16380000  16385000
+                                                                                          16355000
+                                                                                                                         time t (s)
+
+                                                                     Fig. 13. Narrow width variation versus time.
+
+                                                                                               TABLE II.      RESISTANCE VARIATION OF STRIP.
+
+t=16378000 s                                     t=16381000 s                                   time (s)      resistance of strip ()
+
+Fig. 11. Void growth process (the contour: Jy).                                                16350000                8.7104
+                                                                                               16354000                8.7104
+    Using EBD, the void growth process is determined in Fig.
+11. The void can be investigated visually. Also, Fig. 12 shows                                 16357000                8.7168
+the void volume variation versus time. It can be seen that the                                 16360000
+void growth speed is increased.                                                                16363000                8.7168
+                                                                                               16366000                8.7478
+    During the void growth, the narrow width wn is defined as                                  16369000                8.7828
+the remain width for the electric current flow in the strip. Fig.                              16372000                8.8329
+13 shows the variation of wn versus time. The smaller wn                                       16375000                8.9047
+causes higher electric current density (shown in Fig. 11)                                      16378000                9.0044
+                                                                                               16381000                9.2253
+                                                                                                                       10.381
+    From ref. [1], a 15% increase in electric resistance can be            and TTF. Using these data, the product life can be improved
+considered the electromigration failure so that the time to                and the optimal design can be obtained.
+failure (TTF) can be defined. This criterion is also used in this
+paper. In TABLE II, it lists the strip resistance variation versus                                  ACKNOWLEDGMENT
+time. Due to the void growth, the strip resistance increases. At
+16381000 s, the resistance increase is 19%. The TTF can be                      The author is grateful to Ming Chi University of
+determined in the range from 16378000 s to 16381000 s.                     Technology (MCUT) for the financial support under the
+                                                                           following projects: VL012-1100-111, VL017-1100-112, VL
+    Fig. 14 shows the vector plot of the electric current density          005-1100-113 .
+at t=16381000 s. Due to the void formation, the current
+density concentrates in the narrow width region.                                                         REFERENCES
+
+Fig. 14. Vector plot of electric current density (Jy, units: pA/m2) at t=  [1] Y. Liu, Q. Wang, L. Liang, X. Chen, S. Irving and T. Luk, "A new
+16381000 s.                                                                      prediction methodology for electromigration-induced solder degradation
+                                                                                 in a WL-CSP system," ECTC 2009 : IEEE 59th Electronic Components
+                         IV. CONCLUSIONS                                         and Technology Conference, San Diego, CA, 2009.
+    Using the electro-thermo-structural-diffusion coupled-field
+finite element analysis and EBD method of ANSYS software,                  [2] Z. Zhang, Q. Liu, et al., "Influence of stress on the electromigration life
+the atomic migration and void growth of the SAC strip have                       of solder," IEEE Trans. Compon. Packag. Manuf. Technol., vol. 7 (5),
+been analyzed. Also, the electric current density, temperature,                  pp. 762­767, 2017.
+stress and normalized atomic density are obtained.
+Furthermore, the electric resistance change and TTF are                    [3] J. Lienig and M. Thiele, Fundamentals of Electromigration-Aware
+defined for the electronic reliability and design.                               Integrated Circuit Design. Switzerland: Springer International
+    The methodology proposed in this paper can be applied in                     Publishing AG, 2018.
+the life design of the micro-electronic products such as the
+chip packaging, solder joints, solder balls and wires. During              [4] Q. Wang, et al., "An observation and explanation of interior cracking at
+the virtual design process, the simulation results can provide                   the interface of solder by electromigration," Microelectronics Reliability,
+the data of the void growth, failure mode, temperature field                     vol. 97, pp. 79­84, 2019.
+
+                                                                           [5] ANSYS 18.1 Mechanical APDL Product Documentation. USA: ANSYS
+                                                                                 Inc., 2017.
+
+                                                                           [6] Z. Cui, X. Fan, Y. Zhang, S. Vollebregt, J. Fan, G. Zhang, "Coupling
+                                                                                 model of electromigration and experimental verification ­ Part I: Effect
+                                                                                 of atomic concentration gradient," J. Mech. Phys. Solids, vol. 174, pp.
+                                                                                 105257, 2023.
+
+                                                                           [7] Z. Cui, X. Fan, Y. Zhang, S. Vollebregt, J. Fan, G. Zhang, "Coupling
+                                                                                 model of electromigration and experimental verification ­ Part II:
+                                                                                 Impact of thermomigration," J. Mech. Phys. Solids, vol. 174, pp. 105256,
+                                                                                 2023.
+
+                                                                           [8] Y. Zhang, W. Tian, H. Wang, X. Zhang, W. Shao, B. Zhou, Y. Shi, W.
+                                                                                 Gong, R. Deng, J. Zhao, P. Wang, Y. Feng, "Electrothermal reliability
+                                                                                 analysis of electromigration in 3-D TSV-RDL interconnects," IEEE
+                                                                                 Trans. Compon. Packag. Manuf. Technol., vol. 14(1), pp. 157­165,
+                                                                                 2024.
+
+                                                                           [9] J. Zhang, X. Zhang, M. Liu, F. Tian, S. Chen, F. Xiao,
+                                                                                 "Electromigration reliability of SnAgCu solder joints in WLCSP," 25th
+                                                                                 International Conference on Electronic Packaging Technology, Tianjin,
+                                                                                 China, 2024.
+
+Your Name  Title*                        AUTHORS' BACKGROUND                                 Personal website
+                                           Research Field                                    -
+
+Thomas Jin-Chee Liu Associate Professor  Solid mechanics,
+
+                                         Electronic reliability,
+
+                                         Finite element analysis
+
+*This form helps us to understand your paper better, the form itself will not be published.
+

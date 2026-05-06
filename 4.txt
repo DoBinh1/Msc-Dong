@@ -1,0 +1,421 @@
+ 
+FINISH  
+/CLEAR,START
+
+!** The melting point of SAC alloys is 217¡V220 ¢XC
+!   note the max temp
+
+
+/com, ANSYS 18.1
+
+/title,Dong
+/filename,Dong 
+
+
+/PREP7 
+ 
+ET,1,PLANE223,100111    
+KEYOPT,1,1,100111      !Thermo-electric-structural-diffu
+    
+ET,2,SOLID226,100111   
+KEYOPT,2,1,100111      !Thermo-electric-structural-diffu   
+                 ! material, tbopt=0  
+                 ! Constants and material coefficients in uMKS system of units  (sizes in um) 
+kB=1.3806488e-23*1.e12   ! Boltzmann constant, pJ/K
+kB_eV=8.6173324e-5       ! Boltzmann constant, eV/K
+
+! Copper (mat 1)  
+
+mp,rsvx,1,2.38e-8*1e-6   ! electric resistivity, TOhm*um @ 200 C
+mp,dxx,1,7.8e-5*1e12     ! pre-exponential diffusivity, (um)^2/s
+mp,kxx,1,393*1e6         ! thermal conductivity, pW/(um*K)
+mp,c,1,385.2*1e12        ! specific heat, pJ/kg K
+mp,dens,1,8900*1e-18     ! density, kg/(um)^3
+
+Qa=210e3                 ! activation energy, J/(K*mol)
+R=8.31445                ! universal gas constant, J/(K*mol)
+Z1=-4                    ! charge number
+
+V1=1.182e-29*1e18        ! atomic volume, um^3
+ 
+tb,migr,1                ! migration model for Cu
+tbdata,1,Qa/R            ! diffusivity
+tbdata,2,V1/kB           ! hydrostatic stress migration
+tbdata,4,Z1/kB_eV        ! electromigration
+
+mp,ex,1,127.7e9*1e-6     ! Young's modulus, MPa
+mp,prxy,1,0.31           ! Poisson's ratio
+
+mp,cref,1,1              ! reference concentration 
+mp,betx,1,1e-5           ! coefficient of diffusion expansion 
+                         ! for back stress calculation
+
+tref,25                  ! reference temperature and
+mp,alpx,1,17.1e-6        ! coefficient of thermal expansion 1/deg
+                         ! for thermal strain calculation
+
+
+
+! Solder - SAC (mat 2)
+
+mp,rsvx,2,20.75e-8*1e-6  ! electric resistivity @ 200 degC, TOhm*um
+mp,dxx,2,4.1e-5*1e12     ! pre-exponential diffusivity, (um)^2/s
+mp,kxx,2,57*1e6          ! thermal conductivity, pW/(um*K)
+mp,c,2,219*1e12          ! specific heat, pJ/kg K
+mp,dens,2,7390*1e-18     ! density, kg/(um)^3
+
+Ea=0.98                  ! activation energy, eV
+Q=0.0094                 ! heat of transport, eV
+Z2=-23                   ! charge number
+V2=2.71e-29*1e18         ! atomic volume, um^3
+
+
+tb,migr,2                ! migration model for SAC
+tbdata,1,Ea/kB_eV        ! diffusivity
+tbdata,2,V2/kB           ! hydrostatic stress migration
+tbdata,3,Q/kB_eV         ! thermomigration
+tbdata,4,Z2/kB_eV        ! electromigration
+
+
+mp,ex,2,26.2e9*1e-6      ! Young's modulus
+mp,prxy,2,0.35           ! Poisson's ratio
+
+ 
+mp,cref,2,1              ! reference normalized concentration 
+mp,betx,2,1e-5           ! coefficient of diffusion expansion 
+                         ! for back stress calculation
+
+mp,alpx,2,23e-6          ! coefficient of thermal expansion, 1/deg    
+                         !units:   uMKS, um
+
+
+                         !mm
+K, ,0,0,,   
+K, ,5,0,,   
+K, ,7,0,,  
+K, ,8,0,,  
+K, ,10,0,,  
+K, ,10,100,,
+K, ,0,100,, 
+K, ,0,2.5,,  
+K, ,0,10,,  
+K, ,10,10,, 
+
+LSTR,       1,       2  
+LSTR,       2,       3  
+LSTR,       3,       4  
+LSTR,       4,       5  
+LSTR,       8,       9  
+LSTR,       9,      10  
+LSTR,      10,       5  
+LSTR,      10,       6  
+LSTR,       6,       7  
+LSTR,       7,       9  
+LSTR,       8,       1  
+
+
+FLST,2,4,4  
+FITEM,2,10  
+FITEM,2,9   
+FITEM,2,8   
+FITEM,2,6   
+AL,P51X 
+
+FLST,2,8,4  
+FITEM,2,5   
+FITEM,2,6   
+FITEM,2,7   
+FITEM,2,4   
+FITEM,2,3   
+FITEM,2,2   
+FITEM,2,1   
+FITEM,2,11  
+AL,P51X 
+
+
+APLOT   
+
+CYL4,0,0,5
+   
+FLST,2,3,5,ORDE,2   
+FITEM,2,1   
+FITEM,2,-3  
+AOVLAP,P51X 
+
+ADELE,       5, , ,1
+
+APLOT  
+
+                          !change units mm to um
+
+ARSCALE,all, , ,1000, 1000, 1000, ,0,1
+
+APLOT   
+
+                          !MESH crack tip area, um  ***
+type,1
+mat,1
+MSHAPE,1,2D 
+MSHKEY,0
+esize,250 
+amesh,4
+
+mat,2
+amesh,6
+
+mat,2
+MSHAPE,0,2D
+esize,3000 
+amesh,1
+
+eplot
+
+                          !reflect
+
+FLST,3,3,5,ORDE,3   
+FITEM,3,1   
+FITEM,3,4   
+FITEM,3,6   
+ARSYM,Y,P51X, , , ,0,0  
+
+NUMMRG,NODE,1E-06, , ,LOW   
+
+allsel,all
+
+eplot
+ 
+
+                          !2D --> 3D
+
+
+TYPE,   2   
+EXTOPT,ESIZE,1,0,             ! ** thickness: 1 layer   
+EXTOPT,ACLEAR,1 
+ 
+EXTOPT,ATTR,1,0,0   
+REAL,_Z4
+ESYS,0  
+  
+
+FLST,2,6,5,ORDE,2   
+FITEM,2,1   
+FITEM,2,-6  
+VEXT,P51X, , ,0,0,50,,,,
+  
+
+NUMMRG,NODE,1E-07, , ,LOW   
+
+ALLSEL,ALL  
+
+eplot
+
+
+
+                            !strcu BC
+FLST,2,4,3,ORDE,4   
+FITEM,2,6   
+FITEM,2,-7  
+FITEM,2,11  
+FITEM,2,15   
+DK,P51X, ,0, ,0,UZ, , , , , ,   
+
+FLST,2,6,5,ORDE,4   
+FITEM,2,28  
+FITEM,2,-30 
+FITEM,2,36  
+FITEM,2,-38 
+DA,P51X,UY,0
+
+FLST,2,2,4,ORDE,2   
+FITEM,2,66  
+FITEM,2,72  
+DL,P51X, ,UX,0  
+
+
+
+toffst,273                  ! temperature offset from absolute zero to zero, degC
+
+
+
+                            ! convection  , film coefficient, pW/(um)^2*degC
+ 
+hc=21
+Tinf=26       
+
+FLST,2,10,5,ORDE,7  
+FITEM,2,1   
+FITEM,2,-2  
+FITEM,2,7   
+FITEM,2,-8  
+FITEM,2,10  
+FITEM,2,-14 
+FITEM,2,16   
+SFA,P51X,1,CONV, hc,Tinf,   
+
+FLST,2,14,5,ORDE,8  
+FITEM,2,3   
+FITEM,2,-6  
+FITEM,2,17  
+FITEM,2,21  
+FITEM,2,-23 
+FITEM,2,27  
+FITEM,2,31  
+FITEM,2,-35  
+SFA,P51X,1,CONV, hc,Tinf,   
+    
+
+
+                            !voltage 
+ASEL,S, , ,13 
+NSLA,S,1
+CP,1,VOLT,all  
+ALLSEL,ALL  
+
+DA, 11, VOLT,0, 
+
+ALLSEL,ALL  
+ 
+
+                            !clear Cu
+
+FLST,2,2,6,ORDE,2   
+FITEM,2,3   
+FITEM,2,-4  
+VCLEAR,P51X 
+
+eplot
+
+
+                         !************** change size : 1/100
+
+FLST,2,6,6,ORDE,2   
+FITEM,2,1   
+FITEM,2,-6  
+VLSCAL,P51X, , ,0.01,0.01,0.01, ,0,1
+
+eplot
+
+save
+
+finish
+
+
+/solu
+
+ANTYPE,TRANS		! Transient analysis
+TRNOPT,FULL 		! 
+NROPT,FULL	! Choose default option of the Newton-Raphsons interation
+autots,on		!Auto matic time-stepping, including bisection
+NEQIT,270		! Specifies the maximum number of equilibritum
+TREF,26			! Reference temperature
+
+                         !** load step  I.C.
+!Load step Options:
+TIME,1e-6 			! TIME at end of load step
+DELTIM,0.5e-6,0.5e-6,0.5e-6     ! Time step controls (Starting , min , max)
+OUTRES,ALL,1			! Predictor on, 
+KBC,1                           !kbc,1= stepped load.  
+timint,off			! Turn of transient effect
+D, all, , Tinf, , , ,TEMP, , , , ,  ! Apply T = 26 for all element
+D, all, ,    1, , , ,conc, , , , ,  ! Apply concentration = 1 on all element
+solve
+
+                         !** load step     
+TIME,2e-6 			!Sets the time for a load step (the end of the load step)
+DELTIM,0.5e-6,0.5e-6,0.5e-6   	
+OUTRES,ALL,1
+KBC,0
+timint,on			!Include transient effect
+DDELE, all,TEMP 
+DDELE, all,conc  
+solve
+                         !** load step     
+ 
+TIME,16300000
+nsubst,30,30,30		!Specifies that 30 substeps have to be taken in this load step
+OUTRES,ALL,1		!Store result at every substep
+KBC,1                        !step load
+timint,on		!include transient effect
+TOC=0.012e12                         !0.012A= 0.012e12 pA                       
+FK, 11,AMPS, TOC,   	! Define electric current with amplitude 0.012A load at keypoint 11
+solve
+            
+                         !** load step   
+TIME,16354000
+deltim,3000,3000,3000,
+solve 
+  
+! Use previous solved result
+/POST1
+SET,LAST
+ESEL,S,LIVE,,1
+  
+ETABLE,ERAS
+ETABLE,CCONC,SMISC,1
+  
+! Select alive elements where CCONC <= CREF
+ESEL,S,LIVE,,1
+ESEL,R,ETAB,CCONC,,REFC
+
+CM,TO_KILL_1,ELEM
+CMWRITE,TO_KILL_1,cm
+i=1
+REFC  = 0.85
+NSTEP = 9
+TBASE = 16354000
+*DO,LS,1,NSTEP,1
+  
+
+
+  ! Kill before solving next load step
+  /SOLU
+  /INPUT,TO_KILL_%i%,cm  ! Read the component number ls-1 for killing in step ls
+  ALLSEL,ALL
+  CMSEL,S,TO_KILL_%i%
+  EKILL,ALL
+  TNEW = TBASE + LS*3000 
+  TIME,TNEW
+  DELTIM,3000,3000,3000
+  OUTRES,ALL,1
+
+  /COM, LOOP NUMBER = %LS%
+  /COM, TARGET TIME = %TNEW%	
+  SOLVE
+  i = i + 1
+  FINISH
+ ! Use previous solved result
+  /POST1
+  SET,LAST
+  ESEL,S,LIVE,,1
+  
+  ETABLE,ERAS
+  ETABLE,CCONC,SMISC,1
+  
+  ! Select alive elements where CCONC <= CREF
+  ESEL,S,LIVE
+  ESEL,R,ETAB,CCONC,,REFC
+
+  CM,TO_KILL_%i%,ELEM
+  CMWRITE,TO_KILL_%i%,cm
+  FINISH
+*ENDDO
+/POST1  
+
+ALLSEL,ALL  
+/DSCALE,1,1
+SET,last  
+
+/EFACET,2   
+
+PLVECT,JC, , , ,VECT,ELEM,ON,0  
+
+PLNSOL, TEMP,, 0,1.0
+
+PLNSOL, CONC,, 0,1.0
+
+/CVAL,1,0.85,1,1.1,1.2,1.3,1.4,1.5,1.7  
+/REPLOT  
+ 
+/EDGE,1,1,45
+/GLINE,1,0   
+/REPLOT 

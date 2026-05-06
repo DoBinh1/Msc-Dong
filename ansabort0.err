@@ -1,0 +1,13 @@
+/COM,ANSYS RELEASE 2024 R2           BUILD 24.2      UP20240603       21:37:10
+/COM,ANSYS RELEASE 2024 R2           BUILD 24.2      UP20240603       22:13:45
+
+ *** WARNING ***                         CP =      72.172   TIME= 22:15:50
+ No element table items stored for the selected item group.              
+  The PRETAB command is ignored.                                         
+
+ *** ERROR ***                           CP =     222.766   TIME= 22:19:08
+ An error occurred while attempting to open the results file             
+ ansabort.rst.                                                           
+
+ *** ERROR ***                           CP =     222.875   TIME= 22:19:10
+ No results file available.                                              

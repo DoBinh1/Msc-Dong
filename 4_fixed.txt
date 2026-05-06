@@ -1,0 +1,326 @@
+! ============================================================
+!  Void growth in SAC solder strip — phiên bản đã sửa
+!  Hệ đơn vị: uMKS (μm, μN, MPa, pJ, pA, V, TΩ, °C)
+!  Tham chiếu: T.J.-C. Liu, CPEEE 2025
+!  Sửa từ file 4.txt — xem SaiVaSua.md để biết chi tiết
+! ============================================================
+
+FINISH
+/CLEAR,START
+/FILNAME,Dong,1                  ! [FIX B.1] đặt jobname đúng
+/TITLE,Void growth in SAC strip — Dong
+
+/PREP7
+
+! ---- Phần tử & hằng số ----
+ET,1,PLANE223,100111             ! 2D coupled struct-therm-elec-diff
+ET,2,SOLID226,100111             ! 3D coupled struct-therm-elec-diff
+
+kB    = 1.3806488e-23 * 1.e12    ! Boltzmann, pJ/K
+kB_eV = 8.6173324e-5             ! Boltzmann, eV/K
+
+! ---- Vật liệu 1: Cu (pad) ----
+mp,rsvx,1, 2.38e-8 * 1e-6        ! resistivity, TΩ·μm
+mp,dxx ,1, 7.8e-5 * 1e12         ! pre-exp diffusivity, μm²/s
+mp,kxx ,1, 393 * 1e6             ! thermal cond., pW/(μm·K)
+mp,c   ,1, 385.2 * 1e12          ! specific heat, pJ/(kg·K)
+mp,dens,1, 8900 * 1e-18          ! density, kg/μm³
+
+Qa = 210e3                       ! activation energy, J/(K·mol)
+R  = 8.31445                     ! gas constant, J/(K·mol)
+Z1 = -4
+V1 = 1.182e-29 * 1e18            ! atomic vol, μm³
+
+tb,migr,1
+tbdata,1, Qa/R                   ! diffusivity
+tbdata,2, V1/kB                  ! stress migration
+tbdata,4, Z1/kB_eV               ! electromigration
+
+mp,ex  ,1, 127.7e9 * 1e-6        ! Young, MPa
+mp,prxy,1, 0.31
+mp,cref,1, 1
+mp,betx,1, 1e-5
+mp,alpx,1, 17.1e-6
+
+TREF,26                          ! [FIX B.12] thống nhất TREF = 26
+
+! ---- Vật liệu 2: SAC ----
+mp,rsvx,2, 20.75e-8 * 1e-6
+mp,dxx ,2, 4.1e-5 * 1e12
+mp,kxx ,2, 57 * 1e6
+mp,c   ,2, 219 * 1e12
+mp,dens,2, 7390 * 1e-18
+
+Ea = 0.98
+Qst = 0.0094
+Z2 = -23
+V2 = 2.71e-29 * 1e18
+
+tb,migr,2
+tbdata,1, Ea/kB_eV
+tbdata,2, V2/kB
+tbdata,3, Qst/kB_eV
+tbdata,4, Z2/kB_eV
+
+mp,ex  ,2, 26.2e9 * 1e-6
+mp,prxy,2, 0.35
+mp,cref,2, 1
+mp,betx,2, 1e-5
+mp,alpx,2, 23e-6
+
+! ============================================================
+!  Hình học (mm) — ARSCALE × 100 thay vì 1000 (FIX B.4)
+! ============================================================
+K, ,0,0,
+K, ,5,0,
+K, ,7,0,
+K, ,8,0,
+K, ,10,0,
+K, ,10,100,
+K, ,0,100,
+K, ,0,2.5,
+K, ,0,10,
+K, ,10,10,
+
+LSTR, 1, 2
+LSTR, 2, 3
+LSTR, 3, 4
+LSTR, 4, 5
+LSTR, 8, 9
+LSTR, 9,10
+LSTR,10, 5
+LSTR,10, 6
+LSTR, 6, 7
+LSTR, 7, 9
+LSTR, 8, 1
+
+FLST,2,4,4
+FITEM,2,10
+FITEM,2, 9
+FITEM,2, 8
+FITEM,2, 6
+AL,P51X
+
+FLST,2,8,4
+FITEM,2,5
+FITEM,2,6
+FITEM,2,7
+FITEM,2,4
+FITEM,2,3
+FITEM,2,2
+FITEM,2,1
+FITEM,2,11
+AL,P51X
+
+CYL4,0,0,5
+FLST,2,3,5,ORDE,2
+FITEM,2,1
+FITEM,2,-3
+AOVLAP,P51X
+ADELE,5,,,1
+
+! [FIX B.4] đổi mm → μm bằng scale × 100 (không cần VLSCAL nữa)
+ARSCALE,ALL,,,100,100,100,,0,1
+
+! ============================================================
+!  Mesh
+! ============================================================
+type,1
+mat,1
+MSHAPE,1,2D
+MSHKEY,0
+esize,25                         ! μm — nhỏ hơn vì hình học giờ ở μm
+amesh,4
+
+mat,2
+amesh,6
+
+mat,2
+MSHAPE,0,2D
+esize,300
+amesh,1
+
+! ---- Mirror ----
+FLST,3,3,5,ORDE,3
+FITEM,3,1
+FITEM,3,4
+FITEM,3,6
+ARSYM,Y,P51X,,,,0,0
+NUMMRG,NODE,1E-06,,,LOW
+ALLSEL,ALL
+
+! ---- Extrude 2D → 3D ----
+TYPE,2
+EXTOPT,ESIZE,1,0
+EXTOPT,ACLEAR,1
+EXTOPT,ATTR,1,0,0
+ESYS,0
+
+FLST,2,6,5,ORDE,2
+FITEM,2,1
+FITEM,2,-6
+VEXT,P51X,,,0,0,5                ! [FIX B.4] dày 5 μm (tương đương 0.5 sau scale gốc, nhưng giờ scale 100)
+NUMMRG,NODE,1E-07,,,LOW
+ALLSEL,ALL
+
+! ============================================================
+!  BC theo TỌA ĐỘ — không phụ thuộc số hiệu area  (FIX B.5)
+! ============================================================
+! Lấy biên trên/dưới theo X
+*GET,xMin,NODE,0,MNLOC,X
+*GET,xMax,NODE,0,MXLOC,X
+*GET,yMin,NODE,0,MNLOC,Y
+*GET,yMax,NODE,0,MXLOC,Y
+*GET,zMin,NODE,0,MNLOC,Z
+*GET,zMax,NODE,0,MXLOC,Z
+
+eps = 0.5
+
+! VOLT = 0 ở cạnh y = yMin
+NSEL,S,LOC,Y,yMin-eps,yMin+eps
+D,ALL,VOLT,0
+ALLSEL,ALL
+
+! Couple VOLT trên cạnh y = yMax và áp dòng tổng
+NSEL,S,LOC,Y,yMax-eps,yMax+eps
+CP,1,VOLT,ALL
+*GET,Nmaster,NODE,0,NUM,MIN
+ALLSEL,ALL
+
+! Cơ học — chống rigid body
+NSEL,S,LOC,Y,yMin-eps,yMin+eps
+D,ALL,UY,0
+ALLSEL,ALL
+
+NSEL,S,LOC,X,-eps,eps
+D,ALL,UX,0
+ALLSEL,ALL
+
+NSEL,S,LOC,Z,zMin-eps,zMin+eps
+D,ALL,UZ,0
+ALLSEL,ALL
+
+! Convection trên TẤT CẢ mặt ngoài trừ 2 mặt cấp dòng
+TOFFST,273
+hc   = 21
+Tinf = 26
+
+ASEL,S,EXT
+ASEL,U,LOC,Y,yMin-eps,yMin+eps
+ASEL,U,LOC,Y,yMax-eps,yMax+eps
+SFA,ALL,1,CONV,hc,Tinf
+ALLSEL,ALL
+
+SAVE
+FINISH
+
+! ============================================================
+!  /SOLU — bài toán transient
+! ============================================================
+/SOLU
+ANTYPE,TRANS
+TRNOPT,FULL
+NROPT,FULL
+AUTOTS,ON
+LNSRCH,ON
+NEQIT,50
+
+! Dùng Initial Condition thay cho Dirichlet (FIX B.6)
+IC,ALL,TEMP,Tinf
+IC,ALL,CONC,1
+
+! Nới convergence cho coupled-field
+CNVTOL,F   ,, 1e-3, 2
+CNVTOL,HEAT,, 1e-3, 2
+CNVTOL,AMPS,, 1e-3, 2
+CNVTOL,RATE,, 1e-3, 2
+
+OUTRES,ALL,LAST                  ! (FIX B.14) chỉ ghi substep cuối mỗi LS
+
+! ---- LS1: ramp dòng 0.012 A trong 1 s ----
+TIME,1
+DELTIM,0.05,1e-3,0.5
+KBC,0
+TOC = 0.012e12                   ! 0.012 A = 0.012e12 pA
+F,Nmaster,AMPS,TOC
+SOLVE
+
+! ---- LS2: chạy nhanh tới 1e6 s ----
+TIME,1e6
+DELTIM,1000,100,100000
+KBC,1
+SOLVE
+
+! ---- LS3: chạy mịn dần tới gần TTF ----
+TIME,16300000
+DELTIM,10000,1000,500000
+SOLVE
+
+! ---- LS4: tiến tới thời điểm bắt đầu void ----
+TIME,16354000
+DELTIM,3000,300,3000
+SOLVE
+FINISH
+
+! ============================================================
+!  Vòng EBD — kill phần tử có C ≤ 0.85
+! ============================================================
+REFC  = 0.85
+NSTEP = 9
+TBASE = 16354000
+
+*DO,LS,1,NSTEP,1
+
+  /POST1
+  SET,LAST
+  ESEL,S,LIVE
+  ETABLE,ERAS
+  ETABLE,CCONC,SMISC,1           ! TODO: verify SMISC index trong R2024
+  ESEL,R,ETAB,CCONC,, REFC
+  *GET,nKill,ELEM,0,COUNT
+  /COM, *** LS = %LS%, số phần tử sẽ kill = %nKill% ***
+
+  *IF,nKill,EQ,0,EXIT            ! (FIX B.8.4) thoát nếu không còn gì để kill
+
+  CM,TO_KILL_%LS%,ELEM
+  FINISH
+
+  /SOLU
+  ANTYPE,,REST                   ! (FIX B.8.2) restart đúng cách
+  ALLSEL,ALL
+  CMSEL,S,TO_KILL_%LS%
+  EKILL,ALL
+  ALLSEL,ALL
+
+  TNEW = TBASE + LS*3000
+  TIME,TNEW
+  DELTIM,3000,300,3000
+  OUTRES,ALL,LAST
+  SOLVE
+  FINISH
+
+*ENDDO
+
+! ============================================================
+!  Hậu xử lý
+! ============================================================
+/POST1
+SET,LAST
+/EFACET,2
+/EDGE,1,1,45
+/GLINE,1,0
+
+PLNSOL,VOLT
+PLNSOL,TEMP
+PLNSOL,S,Y
+PLNSOL,CONC
+/CVAL,1,0.85,1,1.1,1.2,1.3,1.4,1.5,1.7
+/REPLOT
+
+PLVECT,JC,,,,VECT,ELEM,ON,0
+
+! Điện trở strip = V_master / I_total
+*GET,Vmaster,NODE,Nmaster,VOLT
+Rstrip_TOhm = Vmaster / TOC
+Rstrip_Ohm  = Rstrip_TOhm * 1e6
+/COM, *** Rstrip = %Rstrip_Ohm% Ohm ***
