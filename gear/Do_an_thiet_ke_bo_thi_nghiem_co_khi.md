@@ -142,7 +142,7 @@ $$\frac{1}{k_{mesh}} = \frac{1}{k_H} + \sum_{i=1}^{2}\left(\frac{1}{k_{b,i}} + \
 
 với các thành phần: Hertz $k_H$, uốn $k_b$, trượt $k_s$, nén dọc trục $k_a$, biến dạng nền $k_f$. Độ cứng nền theo Sainsot (2004):
 
-$$\frac{1}{k_f} = \frac{\cos^2\alpha_m}{EL}\left[ L^{*}\!\left(\frac{u_f}{S_f}\right)^{2} + M^{*}\!\left(\frac{u_f}{S_f}\right) + P^{*}\big(1 + Q^{*}\tan^2\alpha_m\big)\right]$$
+$$\frac{1}{k_f} = \frac{\cos^2\alpha_m}{EL}\left[ L^{\ast}\left(\frac{u_f}{S_f}\right)^{2} + M^{\ast}\left(\frac{u_f}{S_f}\right) + P^{\ast}\left(1 + Q^{\ast}\tan^2\alpha_m\right)\right]$$
 
 Khi có vết nứt, chiều cao tiết diện hữu hiệu giảm: $h_{x}^{crack}(x) = h_{x}^{healthy}(x) - q(x)$, làm $K_{mesh}$ giảm cục bộ.
 
